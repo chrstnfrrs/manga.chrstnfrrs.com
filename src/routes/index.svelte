@@ -1,33 +1,35 @@
 <script>
-	import { createClient, setClient, operationStore, query } from '@urql/svelte';
+  let asdf = {}
+  fetch("https://3eriodbh.api.sanity.io/v1/graphql/production/default", {
+    method: "POST",
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      query: `
+        query asdf {
+          allProduct {
+              _id
+          }
+        }
+      `
+    })
+  })
+  .then((res) => res.json())
+  .then((result) => asdf=result);
 
-  const client = createClient({
-    url: "https://3eriodbh.api.sanity.io/v1/graphql/production/default",
-  });
-
-  setClient(client);
-
-  const todos = operationStore(`
-		query asdf {
-			allProduct {
-					_id
-			}
-		}
-	`);
-
-	query(todos);
 </script>
 
 <h1>chrstnfrrs manga list</h1>
 
-{#if $todos.fetching}
+{#if asdf.loading}
   <p>Loading...</p>
-{:else if $todos.error}
-  <p>Oh no... {$todos.error.message}</p>
-{:else}
+{:else if asdf.error}
+  <p>Oh no... {asdf.error.message}</p>
+{:else if asdf.data}
   <ul>
-    {#each $todos.data.allProduct as todo}
-    <li>{todo._id}</li>
+    {#each asdf.data.allProduct as qwer}
+    <li>{qwer._id}</li>
     {/each}
   </ul>
 {/if}
